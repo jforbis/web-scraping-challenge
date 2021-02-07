@@ -41,32 +41,6 @@ def scrape():
 
     mars_data["mars_facts"] = mars_facts_df_html
 
-# Mars Hemispheres
-    mars_hemi_url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
-    browser.visit(mars_hemi_url)
-    hemi_html = browser.html
-    soups = bs(hemi_html, 'html.parser')
-
-    base_url = "https://astrogeology.usgs.gov"
-    full_res_urls = []
-    title_ls = []
-    hemisphere_image_urls = []
-
-for item in hemis:
-    titles = item.find('h3').text
-    title_ls.append(titles)
-    endpoints = item.find('a', class_='itemLink product-item')['href']
-    complete_url = base_url + endpoints
-    browser.visit(complete_url)
-    complete_url_html = browser.html
-    soup3 = bs(complete_url_html, 'html.parser')
-    lg_endpoints = soup3.find('img', class_="wide-image")['src']
-    lg_url = base_url + lg_endpoints
-    full_res_urls.append(lg_url)
-    hemisphere_image_urls.append({"title" : titles, "img_url" : lg_url})
-    
-    mars_data["hemispheres"] = hemisphere_image_urls
-
 
     return mars_data
 
