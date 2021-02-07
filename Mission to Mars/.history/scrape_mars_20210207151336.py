@@ -1,18 +1,15 @@
 # Importing Dependencies
 from bs4 import BeautifulSoup as bs
+from webdriver_manager.chrome import ChromeDriverManager
 from splinter import Browser
 import pandas as pd
 import time
 
-# Run browser from installed location
-def init_browser(): 
-    executable_path = {"executable_path": "/Users/johnforbis/.wdm/drivers/chromedriver/mac64/88.0.4324.96/chromedriver"}
-    return Browser("chrome", headless=False, **executable_path)
+# Install chrome driver
+executable_path = {'executable_path': ChromeDriverManager().install()}
+browser = Browser('chrome', **executable_path, headless=False)
 
-# Dictionary to return
-mars_data = {}
-
-def scrape():    
+def scrape():
 # Mars News
     url = "https://mars.nasa.gov/news/"
     browser.visit(url)
@@ -63,5 +60,13 @@ def scrape():
 
 
     return mars_data
-    
+
     browser.quit()
+
+# Dictionary to return
+mars_data = {
+    "title":title,
+    "article":article,
+    "mars_facts":mars_facts_df_html,
+    "hemispheres":hemisphere_image_urls
+}

@@ -7,7 +7,7 @@ import time
 # Run browser from installed location
 def init_browser(): 
     executable_path = {"executable_path": "/Users/johnforbis/.wdm/drivers/chromedriver/mac64/88.0.4324.96/chromedriver"}
-    return Browser("chrome", headless=False, **executable_path)
+    browser = Browser("chrome", **executable_path, headless=False)
 
 # Dictionary to return
 mars_data = {}
