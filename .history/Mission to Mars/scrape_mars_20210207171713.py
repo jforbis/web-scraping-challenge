@@ -18,6 +18,7 @@ def mars_news_scrape(browser):
     html = browser.html
     soup = bs(html, 'html.parser')
     list_item = soup.select_one("ul.item_list li.slide")
+    time.sleep(5)
     title = list_item.find('div', class_="content_title").text.strip() 
     article = list_item.find('div', class_="article_teaser_body").text.strip()
     
@@ -29,9 +30,9 @@ def mars_facts_scrape():
     mars_facts_df = pd.DataFrame(mars_facts)
     mars_facts_df = mars_facts_df.rename(columns={0:"Metric", 1:"Value"})
     mars_facts_df = mars_facts_df.set_index("Metric")
+    facts = mars_facts_df.to_html()
 
-    return mars_facts_df.to_html()
-
+    return facts
 
 def mars_hemispheres(browser):
 # Mars Hemispheres

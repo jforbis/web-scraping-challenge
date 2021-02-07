@@ -20,20 +20,23 @@ def mars_news_scrape(browser):
     list_item = soup.select_one("ul.item_list li.slide")
     title = list_item.find('div', class_="content_title").text.strip() 
     article = list_item.find('div', class_="article_teaser_body").text.strip()
-    
-    return title, article
+
+    mars_data["title"] = title
+    mars_data["article"] = article
+
+    return mars_data
 
 def mars_facts_scrape():
 # Mars Facts Table
     mars_facts = pd.read_html("https://space-facts.com/mars")[0]
-    mars_facts_df = pd.DataFrame(mars_facts)
+    mars_table = mars_facts
+    mars_facts_df = pd.DataFrame(mars_table)
     mars_facts_df = mars_facts_df.rename(columns={0:"Metric", 1:"Value"})
     mars_facts_df = mars_facts_df.set_index("Metric")
+    mars_facts_df_html = mars_facts_df.to_html()
 
-    return mars_facts_df.to_html()
+    mars_data["mars_facts"] = mars_facts_df_html
 
-
-def mars_hemispheres(browser):
 # Mars Hemispheres
     mars_hemi_url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
     browser.visit(mars_hemi_url)
@@ -58,24 +61,9 @@ def mars_hemispheres(browser):
         full_res_urls.append(lg_url)
         hemisphere_image_urls.append({"title" : titles, "img_url" : lg_url})
         
-    return hemisphere_image_urls
+    mars_data["hemispheres"] = hemisphere_image_urls
 
-def scrape():
-    executable_path = {"executable_path": "/Users/johnforbis/.wdm/drivers/chromedriver/mac64/88.0.4324.96/chromedriver"}
-    browser = Browser("chrome", headless=False, **executable_path)
-    title, article = mars_news_scrape(browser)
-    facts = mars_facts_scrape()
-    hemisphere_image_urls = mars_hemispheres(browser)
 
-    mars_data = {
-        "Title": title,
-        "Article": article,
-        "Mars Facts": facts,
-        "Hemispheres": hemisphere_image_urls,
-    }
-
-    return mars_data 
-
-if __name__ == "__main__":
+    return mars_data
     
     browser.quit()

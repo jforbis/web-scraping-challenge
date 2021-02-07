@@ -18,6 +18,7 @@ def mars_news_scrape(browser):
     html = browser.html
     soup = bs(html, 'html.parser')
     list_item = soup.select_one("ul.item_list li.slide")
+    time.sleep(5)
     title = list_item.find('div', class_="content_title").text.strip() 
     article = list_item.find('div', class_="article_teaser_body").text.strip()
     
@@ -26,12 +27,13 @@ def mars_news_scrape(browser):
 def mars_facts_scrape():
 # Mars Facts Table
     mars_facts = pd.read_html("https://space-facts.com/mars")[0]
-    mars_facts_df = pd.DataFrame(mars_facts)
+    mars_table = mars_facts
+    mars_facts_df = pd.DataFrame(mars_table)
     mars_facts_df = mars_facts_df.rename(columns={0:"Metric", 1:"Value"})
     mars_facts_df = mars_facts_df.set_index("Metric")
+    mars_facts_df_html = mars_facts_df.to_html()
 
-    return mars_facts_df.to_html()
-
+    return mars_facts_df_html
 
 def mars_hemispheres(browser):
 # Mars Hemispheres
@@ -63,14 +65,14 @@ def mars_hemispheres(browser):
 def scrape():
     executable_path = {"executable_path": "/Users/johnforbis/.wdm/drivers/chromedriver/mac64/88.0.4324.96/chromedriver"}
     browser = Browser("chrome", headless=False, **executable_path)
-    title, article = mars_news_scrape(browser)
-    facts = mars_facts_scrape()
-    hemisphere_image_urls = mars_hemispheres(browser)
+    # title, article = mars_news_scrape(browser)
+    # mars_facts_df_html = mars_facts_scrape()
+    # hemisphere_image_urls = mars_hemispheres(browser)
 
     mars_data = {
         "Title": title,
         "Article": article,
-        "Mars Facts": facts,
+        "Mars Facts": mars_facts_df_html,
         "Hemispheres": hemisphere_image_urls,
     }
 
